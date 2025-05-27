@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model account {
+  name             String             @id @db.VarChar(255)
+  contract_account contract_account[]
+}
+
+model center {
+  name            String            @id @db.VarChar(255)
+  contract_center contract_center[]
+}
+
+model contract {
+  contract_number      String                     @id @db.VarChar(255)
+  contract_name        String                     @db.VarChar(255)
+  contract_type        contract_contract_type
+  contract_method      contract_contract_method
+  contract_category    contract_contract_category
+  bid_number           String?                    @db.VarChar(255)
+  contract_date        DateTime                   @db.DateTime(0)
+  contract_start_date  DateTime                   @db.DateTime(0)
+  contract_end_date    DateTime                   @db.DateTime(0)
+  supplier             String                     @db.VarChar(255)
+  contract_price       Int
+  approval_file_url    String?                    @db.Text
+  contract_file_url    String?                    @db.Text
+  approval_number      Int
+  deposit_file_url     String?                    @db.Text
+  defect_bond_file_url String?                    @db.Text
+  expected_price       Int
+  additional_notes     String?                    @db.Text
+  manager_name         String                     @db.VarChar(255)
+  contract_account     contract_account[]
+  contract_center      contract_center[]
+  data                 data[]
+}
+
+model contract_account {
+  id              Int      @id @default(autoincrement())
+  contract_number String   @db.VarChar(255)
+  account_name    String   @db.VarChar(255)
+  contract        contract @relation(fields: [contract_number], references: [contract_number], onDelete: NoAction, onUpdate: NoAction, map: "contract_account_ibfk_1")
+  account         account  @relation(fields: [account_name], references: [name], onDelete: NoAction, onUpdate: NoAction, map: "contract_account_ibfk_2")
+
+  @@index([account_name], map: "account_name")
+  @@index([contract_number], map: "contract_number")
+}
+
+model contract_center {
+  id              Int      @id @default(autoincrement())
+  contract_number String   @db.VarChar(255)
+  center_name     String   @db.VarChar(255)
+  contract        contract @relation(fields: [contract_number], references: [contract_number], onDelete: NoAction, onUpdate: NoAction, map: "contract_center_ibfk_1")
+  center          center   @relation(fields: [center_name], references: [name], onDelete: NoAction, onUpdate: NoAction, map: "contract_center_ibfk_2")
+
+  @@index([center_name], map: "center_name")
+  @@index([contract_number], map: "contract_number")
+}
+
+model data {
+  id                  Int      @id @default(autoincrement())
+  contract_number     String   @db.VarChar(255)
+  erp_code            Int
+  erp_item_name       String   @db.VarChar(255)
+  bid_number          Int
+  contract_category   Int
+  model_number        Int
+  specification       Int
+  manufacturer        String   @db.VarChar(255)
+  expected_unit_price Int
+  expected_price      Int
+  contract_unit_price Int
+  contract_price      Int
+  contract            contract @relation(fields: [contract_number], references: [contract_number], onDelete: NoAction, onUpdate: NoAction, map: "data_ibfk_1")
+
+  @@index([contract_number], map: "contract_number")
+}
+
+enum contract_contract_type {
+  FIRST  @map("최초계약")
+  EXTEND @map("연장계약")
+  CHANGE @map("변경계약")
+}
+
+enum contract_contract_method {
+  BID    @map("입찰")
+  DIRECT @map("수의")
+}
+
+enum contract_contract_category {
+  GENERAL      @map("일반계약")
+  UNIT_PRICE   @map("단가계약")
+  LEASE        @map("임대계약")
+  CONSTRUCTION @map("공사계약")
+  SALE         @map("매각계약")
+  SERVICE      @map("용역계약")
+  MAINTENANCE  @map("유지보수계약")
+  OTHER        @map("기타계약")
+}
