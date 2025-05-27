@@ -42,8 +42,10 @@ export default function Home() {
   };
 
   return (
+    
     <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">계약 목록</h1>
+      <h1>계약조회</h1>
+      <h1 className="text-xl font-bold mb-4">총 데이터 {contracts.length} 개</h1>
       <table className="w-full table-auto border">
         <thead>
           <tr>
@@ -72,18 +74,18 @@ export default function Home() {
         </thead>
         <tbody>
           {contracts.map((contract) => {
-            const centers = contract.centers || [];
-            const accounts = contract.accounts || [];
+            const centers = contract.contract_center?.map(c => c.center.name) || [];
+            const accounts = contract.contract_account?.map(a => a.account.name) || [];
 
             const centerDisplay =
               centers.length > 1
-                ? `${centers[0].name} 외 ${centers.length - 1}개`
-                : centers[0]?.name || '';
+                ? `${centers[0]} 외 ${centers.length - 1}개`
+                : centers[0] || '';
 
             const accountDisplay =
               accounts.length > 1
-                ? `${accounts[0].name} 외 ${accounts.length - 1}개`
-                : accounts[0]?.name || '';
+                ? `${accounts[0]} 외 ${accounts.length - 1}개`
+                : accounts[0] || '';
 
             return (
               <tr key={contract.contract_number}>
@@ -97,7 +99,11 @@ export default function Home() {
                     ''
                   )}
                 </td>
-                <td className="border px-2 py-1">{contract.contract_number}</td>
+                <td className="border px-2 py-1">
+                    <Link href={`/contracts/${contract.contract_number}`} className="text-blue-600 hover:underline">
+                    구매계약 {contract.contract_number}
+                    </Link>
+                </td>
                 <td className="border px-2 py-1">
                   {categoryMap[contract.contract_category]}
                 </td>
