@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 
 export function useContracts() {
   const [contracts, setContracts] = useState([]);
-  const [contract_accounts, setContractAccounts] = useState([]);
-  const [contract_centers, setContractCenters] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 

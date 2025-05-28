@@ -1,12 +1,22 @@
 import { useState } from "react";
+import Button from "../components/button";
+import CustomizedText from "../components/customized_text";
+import Sidebar from "../components/sidebar";
+import Select from "../components/select";
+import Input from "../components/input";
 import { useContracts } from "../hooks/useConstracts";
 import Link from "next/link";
+import { FiLogOut } from "react-icons/fi";
+import { FaMoon } from "react-icons/fa";
+
 
 export default function Home() {
   const { contracts, loading, error } = useContracts();
 
   const [selectedCenter, setSelectedCenter] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedType, setSelectedType] = useState("");
+  const [selectedMethod, setSelectedMethod] = useState("");
   const [contractName, setContractName] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -24,6 +34,8 @@ export default function Home() {
       const nameMatch = contractName
         ? contract.contract_name.includes(contractName)
         : true;
+      const typeMatch = selectedType ? contract.contract_type === selectedType : true;
+      const methodMatch = selectedMethod ? contract.contrat_method === selectedMethod  : true;
       const startDateMatch = startDate
         ? new Date(contract.contract_date) >= new Date(startDate)
         : true;
@@ -34,19 +46,25 @@ export default function Home() {
       return (
         centerMatch &&
         categoryMatch &&
+        typeMatch &&
+        methodMatch &&
         nameMatch &&
         startDateMatch &&
         endDateMatch
       );
     });
     setFilteredContracts(result);
+    console.log("Filtered Contracts:", result);
+    if (result.length === 0) {
+      alert("검색 결과가 없습니다.");
+    }
   };
+
 
   const displayContracts =
     filteredContracts.length > 0 ? filteredContracts : contracts;
 
   const formatDate = (dateStr) => new Date(dateStr).toISOString().split("T")[0];
-
   const calcDaysLeft = (endDate) => {
     const today = new Date();
     const end = new Date(endDate);
@@ -54,6 +72,7 @@ export default function Home() {
     return diff < 0 ? "계약 만료" : `${diff}일`;
   };
 
+  // 얘네도 나중에 리팩토링해서 따로 분리하는 게 나을 듯 or db 구조 수정 필요
   const categoryMap = {
     GENERAL: "일반계약",
     UNIT_PRICE: "단가계약",
@@ -79,105 +98,78 @@ export default function Home() {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
-  return (
-    <div className="flex min-h-screen bg-gray-50">
-      <aside className="w-30 bg-indigo-900 text-white p-4 space-y-4">
-        <div className="text-2xl font-bold mb-6">계약조회</div>
-        <nav className="space-y-2">
-          <div className="hover:bg-indigo-700 p-2 rounded">홈</div>
-          <div className="hover:bg-indigo-700 p-2 rounded">계약</div>
-          <div className="hover:bg-indigo-700 p-2 rounded">문서</div>
-          <div className="hover:bg-indigo-700 p-2 rounded">설정</div>
-        </nav>
-      </aside>
+  console.log("Filtered Contracts:", contracts);
 
+  return (
+    <div className="flex min-h-screen bg-white">
+      <Sidebar />
+
+      {/* 메인 */}
       <div className="flex-1 p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold">계약조회</h1>
-          <div className="flex items-center space-x-4">
-            <button className="text-sm bg-gray-200 px-3 py-1 rounded">
-              로그아웃
-            </button>
-            <button className="text-sm bg-gray-200 px-3 py-1 rounded">
-              🌙
-            </button>
+
+        {/* 헤더 */}
+        <div className="flex justify-end items-right mb-4">
+          <div className="flex items-center space-x-5">
+          <CustomizedText color="black" size="sm" className="font-bold">
+            이성준 / 디지털헬스케어팀(SF파트/파트장)
+          </CustomizedText>
+          <Button color='navy' size='sm' className="flex items-center space-x-2">
+          <span>로그아웃</span>
+          <FiLogOut />
+          </Button>
+          <Button color ='white' size='lg'>
+            <FaMoon />
+          </Button>
           </div>
         </div>
+
+        {/* 타이틀 */}
+        <CustomizedText color="navy" size="lg" children="계약조회" />
 
         {/* 검색 */}
-        <div className="bg-white p-4 rounded shadow mb-4 flex flex-wrap gap-4">
-          <select
-            className="border p-2 rounded"
-            value={selectedCenter}
-            onChange={(e) => setSelectedCenter(e.target.value)}
-          >
-            <option value="">센터 선택</option>
-            <option value="재단본부">재단본부</option>
-            <option value="전국">전국</option>
-          </select>
+        <div className="flex justify-center items-center m-7">
+          <div className="w-550 divide-x-2 divide divide-gray-200 h-40 border-1 border-gray-200 shadow-xl flex">
+          
+          <Select type="center"></Select>
+          <Select type="type"></Select>
+          <Select type = "account"></Select>
+          <Select type="method"></Select>
 
-          <select
-            className="border p-2 rounded"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-          >
-            <option value="">계약종류 선택</option>
-            <option value="GENERAL">일반계약</option>
-            <option value="UNIT_PRICE">단가계약</option>
-            <option value="LEASE">임대계약</option>
-            <option value="CONSTRUCTION">공사계약</option>
-            <option value="SALE">매각계약</option>
-            <option value="SERVICE">용역계약</option>
-            <option value="MAINTENANCE">유지보수계약</option>
-            <option value="OTHER">기타계약</option>
-          </select>
+          <Input type="text" placeholder="계약명" value={contractName}></Input>     
 
-          <input
-            type="text"
-            className="border p-2 rounded"
-            placeholder="계약명"
-            value={contractName}
-            onChange={(e) => setContractName(e.target.value)}
-          />
+          <div className ="flex flex-col mx-2 justify-between">
+            <CustomizedText color="black" size="sm" className="font-bold">
+              계약일자
+            </CustomizedText>
+            
+            <div className="flex space-x-2">
+              <Input type="date" value={startDate}></Input>
+              <Input type="date" value={endDate}></Input>
+            </div>
 
-          <input
-            type="date"
-            className="border p-2 rounded"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-          />
-          <input
-            type="date"
-            className="border p-2 rounded"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-          />
-
-          <button
-            onClick={handleSearch}
-            className="bg-indigo-600 text-white px-4 py-2 rounded"
-          >
-            조회
-          </button>
+          </div>
+          <Button onClick={handleSearch} color ="navy" size="md" className="h-10" children="조회" />
+        </div>
         </div>
 
-        <div className="flex justify-between mb-2">
-          <span className="text-sm">
-            총 데이터 {displayContracts.length} 개
-          </span>
+        {/* 계약 목록 헤더 */}
+        <div className="flex justify-end mb-2">
           <div className="space-x-2">
-            <button className="bg-indigo-600 text-white px-3 py-1 rounded">
-              추가
-            </button>
-            <button className="bg-gray-200 px-3 py-1 rounded">
-              전체다운로드
-            </button>
+           <Button color="navy" size="sm" children="추가"/>
+           <Button color="gray" size="sm" children="전체다운로드"/>
           </div>
         </div>
 
-        <div className="overflow-x-auto bg-white rounded shadow">
-          <table className="w-full text-sm text-left">
-            <thead className="bg-gray-100">
+          <div className="flex justify-between mb-2">
+            <CustomizedText color="navy" size="sm" className="font-bold"> 
+              총 데이터 {displayContracts.length} 개
+            </CustomizedText>
+        </div>
+
+        {/* 계약 목록 테이블 */}
+        <div className="overflow-x-auto bg-white rounded">
+          <table className="w-full text-sm rounded text-center shadow-lg">
+            <thead className="bg-purple-100">
               <tr>
                 {[
                   "센터",
@@ -202,7 +194,7 @@ export default function Home() {
                   "기타",
                   "열람",
                 ].map((header) => (
-                  <th key={header} className="px-2 py-1 border">
+                  <th key={header} className="px-2 py-1">
                     {header}
                   </th>
                 ))}
@@ -245,8 +237,12 @@ export default function Home() {
                       <Link
                         href={`/contracts/${contract.contract_number}`}
                         className="text-blue-600 hover:underline"
+                        rel="noopener noreferrer"
+                        target="_blank"
                       >
-                        구매계약 {contract.contract_number}
+                        <CustomizedText color="sky" size="sm">
+                          구매계약 {contract.contract_number}
+                        </CustomizedText>
                       </Link>
                     </td>
                     <td className="border px-2 py-1">
@@ -262,7 +258,7 @@ export default function Home() {
                     <td className="border px-2 py-1">
                       {formatDate(contract.contract_start_date)}
                     </td>
-                    <td className="border px-2 py-1">
+                    <td className=" px-2 py-1">
                       {formatDate(contract.contract_end_date)}
                     </td>
                     <td className="border px-2 py-1">
@@ -297,9 +293,7 @@ export default function Home() {
                       {contract.additional_notes ? "Y" : "N"}
                     </td>
                     <td className="border px-2 py-1">
-                      <button className="text-blue-500 underline">
-                        다운로드
-                      </button>
+                      <Button color="light-navy" size="sm" children="다운로드" />
                     </td>
                   </tr>
                 );
