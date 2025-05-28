@@ -27,24 +27,3 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
-
-input[type='date']::-webkit-datetime-edit-text {
-  -webkit-appearance: none;
-  display: none;
-}
-input[type='date']::-webkit-datetime-edit-month-field {
-  -webkit-appearance: none;
-  display: none;
-}
-input[type='date']::-webkit-datetime-edit-day-field {
-  -webkit-appearance: none;
-  display: none;
-}
-input[type='date']::-webkit-datetime-edit-year-field {
-  -webkit-appearance: none;
-  display: none;
-}
-input[type=date]::before {
-  color: #444444;
-  content: attr(placeholder); 
-}
