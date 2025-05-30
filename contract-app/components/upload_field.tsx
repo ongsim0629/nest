@@ -1,15 +1,24 @@
 interface UploadFieldProps {
-  label: string;
-  statusText: string;
+  statusText?: string;
 }
 
-export default function UploadField({ label, statusText }: UploadFieldProps) {
+export default function UploadField({ statusText }: UploadFieldProps) {
   return (
     <div className="mb-2">
-      <label className="block text-sm font-semibold mb-1">{label}</label>
       <div className="flex items-center gap-2">
-        <button className="px-3 py-1 bg-[#2E2F6E] text-white rounded text-xs">업로드</button>
-        <span className="text-sm text-gray-500">{statusText}</span>
+        <button className="px-3 py-1 bg-indigo-900 text-white rounded text-md">업로드</button>
+        <span className="font-bold text-sm">파일이 업로드되지 않았습니다.</span>
+
+        {statusText && (
+          <>
+            <span className="ml-3 font-bold">미제출 :</span>
+            <input
+              type="text"
+              placeholder={statusText}
+              className="border border-gray-500 rounded"
+            />
+          </>
+        )}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-export function Table({
+export default function Table({
   columns,
   data,
 }: {

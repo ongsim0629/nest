@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Table } from "../../components/table";
+import Table from "../../components/table";
 import Button from "../../components/button";
 import { FaMoon } from "react-icons/fa";
 import DetailHeader from "../../components/detail_header";
@@ -19,7 +19,6 @@ export default function ContractDetailPage() {
       fetch(`/api/contract/${id}`)
         .then((res) => res.json())
         .then((data) => {
-          console.log("fetch 응답:", data);
           setContractData(data);
           setLoading(false);
         })
@@ -30,21 +29,11 @@ export default function ContractDetailPage() {
     }
   }, [id]);
 
-  useEffect(() => {
-    if (contractData) {
-      console.log("렌더링 후 contract:", contractData.contract);
-      console.log("렌더링 후 centers:", contractData.centers);
-      console.log("렌더링 후 accounts:", contractData.accounts);
-      console.log("렌더링 후 enums:", contractData.enums);
-    }
-  }, [contractData]);
-
   if (loading) return <div>로딩 중...</div>;
   if (!contractData) return <div>데이터 없음</div>;
 
   const contract = contractData.contract;
-
-  if (!contract) return <div>계약 데이터 없음</div>;
+  console.log(contractData);
 
   const headers = [
     "센터명",
@@ -77,7 +66,7 @@ export default function ContractDetailPage() {
     item.specification || "-",
     item.manufacturer || "-",
     contract.supplier || "-",
-    item.quantity != null ? item.quantity : "-",
+    item.quantity != null ? item.quantity : "1",
     item.expected_unit_price != null ? item.expected_unit_price : "-",
     item.expected_price != null ? item.expected_price : "-",
     item.contract_unit_price != null ? item.contract_unit_price : "-",
@@ -100,12 +89,14 @@ export default function ContractDetailPage() {
       </div>
 
       <DetailHeader type="contents" title="계약사항" />
+      <div>
       <Content
         contract={contractData.contract}
         centers={contractData.centers}
         accounts={contractData.accounts}
         enums={contractData.enums}
       />
+      </div>
 
       <div className="flex justify-end mb-2">
         <div className="space-x-2">
@@ -117,7 +108,7 @@ export default function ContractDetailPage() {
 
       <div className="flex justify-between mb-2">
         <CustomizedText color="navy" size="sm" className="font-bold">
-          총 데이터 {contract?.data?.length || 0} 개
+          총 데이터 {contract?.data?.length || "0"} 개
         </CustomizedText>
       </div>
 

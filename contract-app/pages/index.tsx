@@ -1,14 +1,14 @@
 import { useState } from "react";
+import { useContracts } from "../hooks/useConstracts";
 import Button from "../components/button";
 import CustomizedText from "../components/customized_text";
 import Sidebar from "../components/sidebar";
 import Select from "../components/select";
 import Input from "../components/input";
-import { useContracts } from "../hooks/useConstracts";
 import Link from "next/link";
+import Table from "../components/table";
 import { FiLogOut } from "react-icons/fi";
 import { FaMoon } from "react-icons/fa";
-import { Table } from "../components/table";
 
 export default function Home() {
   const { contracts, loading, error } = useContracts();

@@ -7,7 +7,7 @@ interface inputProps {
   onChange?: (value: string) => void;
 }
 
-function Input({ type, placeholder, value, onChange }: inputProps) {
+export default function Input({ type, placeholder, value, onChange }: inputProps) {
   return (
     <input
       type={type}
@@ -18,5 +18,3 @@ function Input({ type, placeholder, value, onChange }: inputProps) {
     ></input>
   );
 }
-
-export default Input;

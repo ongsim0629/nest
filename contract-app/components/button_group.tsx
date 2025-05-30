@@ -9,10 +9,10 @@ export default function ButtonGroup({ options, selected }: ButtonGroupProps) {
       {options.map((item) => (
         <button
           key={item}
-          className={`px-3 py-1 text-xs rounded-full border ${
+          className={`px-3 py-1 text-sm rounded-full border ${
             selected.includes(item)
-              ? "bg-[#2E2F6E] text-white"
-              : "bg-gray-100 text-gray-600"
+              ? "bg-indigo-900 text-white"
+              : "bg-white border border-indigo-900 text-indigo-900"
           }`}
         >
           {item}
