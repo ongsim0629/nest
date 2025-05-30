@@ -6,7 +6,7 @@ interface SelectProps {
   onChange?: (value: string) => void;
 }
 
-function Select({ type, value, onChange }: SelectProps) {
+export default function Select({ type, value, onChange }: SelectProps) {
   let options: { value: string; label: string }[] = [];
 
   switch (type) {
@@ -81,5 +81,3 @@ function Select({ type, value, onChange }: SelectProps) {
     </select>
   );
 }
-
-export default Select;

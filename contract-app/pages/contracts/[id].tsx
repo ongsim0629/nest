@@ -88,7 +88,7 @@ export default function ContractDetailPage() {
         </div>
       </div>
 
-      <DetailHeader type="contents" title="계약사항" />
+      <DetailHeader title="계약사항" />
       <div>
       <Content
         contract={contractData.contract}
@@ -113,7 +113,6 @@ export default function ContractDetailPage() {
       </div>
 
       <DetailHeader
-        type="table"
         title="계약내역"
         count={contract?.data?.length || 0}
       />

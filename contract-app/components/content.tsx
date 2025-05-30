@@ -6,14 +6,14 @@ import ContentRow from "./content_row";
 
 export default function Content({ contract, centers, accounts, enums }) {
   const selectedCenters =
-    contract?.contract_center?.map((c) => c.center_name) || [];
+    contract?.contract_center?.map((center) => center.center_name) || [];
   const selectedAccounts =
     contract?.contract_account?.map((a) => a.account_name) || [];
   const selectedType = contract?.contract_type;
   const selectedMethod = contract?.contract_method;
   const selectedCategory = contract?.contract_category;
 
-    const formatDate = (dateStr) =>
+    const formatDate = (dateStr:string) =>
     dateStr ? new Date(dateStr).toISOString().split("T")[0] : "-";
 
   return (

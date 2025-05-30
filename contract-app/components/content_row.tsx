@@ -66,7 +66,7 @@ function ContentRow({ type, label, value, isEssential, options, selected }: Cont
                         case "date":
                             return (
                                 <div className="flex px-2">
-                                    <input type="date" value={value as string} className="border rounded px-2 py-1 w-60" />;
+                                    <input type="date" value={value as string} className="border rounded px-2 py-1 w-60" />
                                 </div>
                             );
                         case "number":

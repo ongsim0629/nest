@@ -5,6 +5,23 @@ import { PrismaService } from "../prisma.service";
 export class ContractService {
   constructor(private readonly prismaService: PrismaService) {}
 
+  async getAllContracts() {
+    return this.prismaService.client.contract.findMany({
+      include: {
+        contract_center: {
+          include: {
+            center: true,
+          },
+        },
+        contract_account: {
+          include: {
+            account: true,
+          },
+        },
+      },
+    });
+  }
+
   async getContractById(contractNumber: string) {
     const contract = await this.prismaService.client.contract.findUnique({
       where: {
@@ -53,20 +70,4 @@ export class ContractService {
     };
   }
 
-  async getAllContracts() {
-    return this.prismaService.client.contract.findMany({
-      include: {
-        contract_center: {
-          include: {
-            center: true,
-          },
-        },
-        contract_account: {
-          include: {
-            account: true,
-          },
-        },
-      },
-    });
-  }
 }
