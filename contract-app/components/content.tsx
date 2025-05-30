@@ -53,7 +53,7 @@ export default function Content({ contract, centers, accounts, enums }) {
           <ContentRow type="number" label="계약품의번호" isEssential={true} value={contract.approval_number}/>
           <ContentRow type="file" label="계약보증금" value="1"/>
           <ContentRow type="file" label="하자이행보증금" value="1"/>
-          <ContentRow type="number" label="예정가격" isEssential={true} value={contract.expected_price} readOnly/>
+          <ContentRow type="number" label="예정가격" isEssential={true} value={contract.expected_price}/>
           <ContentRow type="text_area" label="계약기타사항" value={contract.additional_notes}/>
       </div>
     </div>
